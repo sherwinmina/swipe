@@ -4,7 +4,9 @@ import {
   View,
   Animated ,
   PanResponder,
-  Dimensions
+  Dimensions, 
+  LayoutAnimation,
+  UIManager
 } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -39,6 +41,10 @@ class Deck extends Component {
     });
 
     this.state = { panResponder, position , index: 0 };
+  }
+
+  componentWillUpdate() {
+    
   }
 
   forceSwipe(direction) {
@@ -77,8 +83,22 @@ class Deck extends Component {
     };
   }
 
+  renderNoMoreCards() {
+    return (
+      <Card title="All Done!">
+        <Text style={{ marginBottom: 10 }}>
+          There's no more content here!
+        </Text>
+        <Button
+        backGroundColor="#03A9F4"
+        title="Get more!"
+        />
+      </Card> 
+    )
+  }
+
   renderCards() {
-    if (this.state.index >= this.props.data,length){
+    if (this.state.index >= this.props.data.length){
       return this.props.renderNoMoreCards();
     }
 
@@ -87,15 +107,19 @@ class Deck extends Component {
       if (i === 0) {
         <Animated.View
           key={item.id}
-          style={this.getCardStyle()}
+          style={[this.getCardStyle(), { top: 10 * (i -this.state.index) }]}
           {...this.state.panResponder.panHandlers}
         >
           {this.props.renderCard(item)}
         </Animated.View>
       }
 
-      return this.props.renderCard(item);
-    });
+      return (
+        <Animated.View key={item.id} style={styles.cardStyle}>
+          { this.props.renderCard(item) }
+        </Animated.View>
+      );
+    }).reverse();
   }
   
   render() {
@@ -104,6 +128,13 @@ class Deck extends Component {
         {this.renderCards()}
       </View>
     );
+  }
+}
+
+const styles = {
+  cardStyle: {
+    position: 'absolute',
+    width: SCREEN_WIDTH
   }
 }
 
