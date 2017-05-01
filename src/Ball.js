@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Animated } from 'react-native';
+import { Text, View, Animated } from 'react-native';
 
 class Ball extends Component {
   componentWillMount() {
@@ -13,6 +13,7 @@ class Ball extends Component {
     return (
       <Animated.View style={this.position.getLayout()}>
               <View style={styles.ball}/>
+              <Text>from the ball</Text>
       </Animated.View>
     );
   }
